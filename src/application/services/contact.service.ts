@@ -24,6 +24,7 @@ export class ContactService {
       name: dto.name,
       phone: dto.phone || null,
       avatar: dto.avatar || null,
+      upiId: dto.upiId || null,
     });
   }
 
@@ -44,6 +45,7 @@ export class ContactService {
       name: dto.name,
       phone: dto.phone,
       avatar: dto.avatar,
+      upiId: dto.upiId,
     });
   }
 
