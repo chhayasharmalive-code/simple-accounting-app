@@ -4,6 +4,7 @@ interface ApiRouterProps {
   webhookRouter: Router;
   contactRouter: Router;
   transactionRouter: Router;
+  dashboardRouter: Router;
 }
 
 /**
@@ -15,6 +16,7 @@ export function createApiRouter(props: ApiRouterProps): Router {
   router.use("/webhooks", props.webhookRouter);
   router.use("/contacts", props.contactRouter);
   router.use("/transactions", props.transactionRouter);
+  router.use("/dashboard", props.dashboardRouter);
 
   return router;
 }

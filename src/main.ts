@@ -9,13 +9,16 @@ import { ClerkTokenVerifier } from "./infrastructure/auth/clerk-token-verifier";
 import { ClerkSyncService } from "./application/services/clerk-sync.service";
 import { ContactService } from "./application/services/contact.service";
 import { TransactionService } from "./application/services/transaction.service";
+import { DashboardService } from "./application/services/dashboard.service";
 import { WebhookController } from "./interface/controllers/webhook.controller";
 import { ContactController } from "./interface/controllers/contact.controller";
 import { TransactionController } from "./interface/controllers/transaction.controller";
+import { DashboardController } from "./interface/controllers/dashboard.controller";
 import { createAuthMiddleware } from "./interface/middlewares/auth.middleware";
 import { createWebhookRouter } from "./interface/routes/webhook.routes";
 import { createContactRouter } from "./interface/routes/contact.routes";
 import { createTransactionRouter } from "./interface/routes/transaction.routes";
+import { createDashboardRouter } from "./interface/routes/dashboard.routes";
 import { createApiRouter } from "./interface/routes/api.router";
 import { createApp } from "./app";
 
@@ -41,11 +44,13 @@ export function bootstrap() {
     contactRepository,
     connectionManager
   );
+  const dashboardService = new DashboardService(contactRepository, transactionRepository);
 
   // 4. HTTP Interface Controllers & Middlewares
   const webhookController = new WebhookController(clerkSyncService);
   const contactController = new ContactController(contactService);
   const transactionController = new TransactionController(transactionService);
+  const dashboardController = new DashboardController(dashboardService);
 
   const authMiddleware = createAuthMiddleware(tokenVerifier);
 
@@ -53,11 +58,13 @@ export function bootstrap() {
   const webhookRouter = createWebhookRouter(webhookController);
   const contactRouter = createContactRouter(contactController, authMiddleware);
   const transactionRouter = createTransactionRouter(transactionController, authMiddleware);
+  const dashboardRouter = createDashboardRouter(dashboardController, authMiddleware);
 
   const apiRouter = createApiRouter({
     webhookRouter,
     contactRouter,
-    transactionRouter
+    transactionRouter,
+    dashboardRouter
   });
 
   // 6. Return fully configured Express application
